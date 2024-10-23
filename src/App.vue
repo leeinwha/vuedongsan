@@ -1,46 +1,31 @@
 <template>
 
-  <div class="black-bg" @click="modal = false" v-if="modal == true">
-    <div class="white-bg">
-      <h4>Title</h4>
-      <p>content</p>
-      <button @click="modal = false">닫기</button>
-    </div>
-  </div>
+  <PrdDetailModal :Productdata="Productdata" :PrdNo="PrdNo" :modal="modal" />
 
   <div class="menu">
     <a v-for="Cate in menus" :key="Cate">{{ Cate }}</a>
   </div>
 
-  <div>
-    <img :src="Productdata[0].image" class="room-img">
-    <h4>{{ Productdata[0].title }}</h4>
-    <p>{{ Productdata[0].price }} ₩</p>
-  </div>  
-  <div>
-    <img src="./assets/room1.jpg" alt="image2" class="room-img">
-    <h4>{{ products[1] }} 원룸</h4>
-    <p>70 만원</p>
-    <button @click="repCount[1]++">허위매물신고</button> 
-    <span> 신고수 : {{ repCount[1] }}</span>
-  </div>
-  <div>
-    <img src="./assets/room2.jpg" alt="image3" class="room-img">
-    <h4>{{ products[2] }} 원룸</h4>
-    <p>70 만원</p>
-    <button @click="repCount[2]++">허위매물신고</button> 
-    <span> 신고수 : {{ repCount[2] }}</span>
+  <DiscountBanner />
+
+  <div v-for="(Product,i) in Productdata" :key="i" @click="modal = true; PrdNo = i">
+    <img :src="Productdata[i].image" class="room-img">
+    <h4>{{ Productdata[i].title }}</h4>
+    <p>{{ Productdata[i].price }} ₩</p>
   </div>
 </template>
 
 <script>
 
 import PrdData from './assets/data'
+import DiscountBanner from './DiscountBanner.vue';
+import PrdDetailModal from './PrdDetailModal.vue';
 
 export default {
   name: 'App',
   data(){
     return {
+      PrdNo : 0,
       Productdata : PrdData,
       modal : false,
       repCount : [0,0,0],
@@ -49,7 +34,8 @@ export default {
     }
   },
   components: {
-
+    DiscountBanner,
+    PrdDetailModal
   }
 }
 </script>
@@ -89,9 +75,16 @@ div{
   padding: 20px;
 }
 .white-bg {
-  width: 100%;
+  margin: auto;
+  width: 70%;
   background: white;
   border-radius: 8px;
   padding: 20px;
+}
+.discount {
+  background: #eee;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
 }
 </style>
