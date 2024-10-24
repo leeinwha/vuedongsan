@@ -1,24 +1,27 @@
 <template>
-
-  <PrdDetailModal :Productdata="Productdata" :PrdNo="PrdNo" :modal="modal" />
-
+  <PrdDetailModal 
+    @closeModal="modal = false" 
+    :Productdata="Productdata" 
+    :PrdNo="PrdNo" 
+    :modal="modal" 
+  />
   <div class="menu">
     <a v-for="Cate in menus" :key="Cate">{{ Cate }}</a>
   </div>
-
   <DiscountBanner />
-
-  <div v-for="(Product,i) in Productdata" :key="i" @click="modal = true; PrdNo = i">
-    <img :src="Productdata[i].image" class="room-img">
-    <h4>{{ Productdata[i].title }}</h4>
-    <p>{{ Productdata[i].price }} ₩</p>
-  </div>
+  <PrdCard 
+    @openModal="modal = true; PrdNo = $event" 
+    :oneroom="Productdata[i]" 
+    v-for="(Card,i) in Productdata" 
+    :key="Card"
+  />  
 </template>
 
 <script>
 
 import PrdData from './assets/data'
 import DiscountBanner from './DiscountBanner.vue';
+import PrdCard from './PrdCard.vue';
 import PrdDetailModal from './PrdDetailModal.vue';
 
 export default {
@@ -35,7 +38,8 @@ export default {
   },
   components: {
     DiscountBanner,
-    PrdDetailModal
+    PrdDetailModal,
+    PrdCard
   }
 }
 </script>
