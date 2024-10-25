@@ -1,14 +1,21 @@
 <template>
-  <PrdDetailModal 
-    @closeModal="modal = false" 
-    :Productdata="Productdata" 
-    :PrdNo="PrdNo" 
-    :modal="modal" 
-  />
+  <Transition name="fade">
+    <PrdDetailModal 
+      @closeModal="modal = false" 
+      :Productdata="Productdata" 
+      :PrdNo="PrdNo" 
+      :modal="modal" 
+    />
+  </Transition>
+  
   <div class="menu">
     <a v-for="Cate in menus" :key="Cate">{{ Cate }}</a>
   </div>
-  <DiscountBanner />
+  <DiscountBanner v-if="showDiscount == true" />
+  <div class="button">
+    <button  @click="priceSort">가격순 정렬</button>
+    <button @click="sortBack">되돌리기</button>
+  </div>
   <PrdCard 
     @openModal="modal = true; PrdNo = $event" 
     :oneroom="Productdata[i]" 
@@ -28,6 +35,8 @@ export default {
   name: 'App',
   data(){
     return {
+      showDiscount : true,
+      PrdOriginal : [...PrdData],
       PrdNo : 0,
       Productdata : PrdData,
       modal : false,
@@ -35,6 +44,21 @@ export default {
       menus : ['Home' , 'Shop' , 'About'],
       products : ['강남구' , '동작구' , '광진구'],
     }
+  },
+  methods : {
+    priceSort(){
+      this.Productdata.sort(function(a,b){
+        return a.price - b.price
+      })
+    },
+    sortBack(){
+      this.Productdata = [...this.PrdOriginal];
+    }
+  },
+  mounted(){
+    setTimeout(()=>{
+      this.showDiscount = false;
+    },2000);
   },
   components: {
     DiscountBanner,
@@ -68,7 +92,7 @@ div{
   padding: 10px;
 }
 .room-img {
-  width: 100%;
+  width: 60%;
   margin-top: 40px;
 }
 .black-bg {
@@ -90,5 +114,37 @@ div{
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
+}
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 0.5s;
+}
+.fade-enter-to {
+  opacity: 1;
+}
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+.button {
+  margin-top: 10px;
+}
+.title{
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+@media screen and (max-width: 768px) {
+  .room-img {
+    width: 100%;
+    margin-top: 20px;
+  }
 }
 </style>
